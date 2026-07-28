@@ -1,0 +1,7 @@
+{
+    "name": "radiofm/app",
+    "description": "Radio FM - Sistema de Gestion Musical",
+    "require": {
+        "php": ">=8.0"
+    }
+}

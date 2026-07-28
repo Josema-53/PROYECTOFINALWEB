@@ -1,15 +1,16 @@
 <?php
-    $host = 'localhost';
-    $user = 'root';
-    $password = '';
-    $database = 'proyectofinal';
-    $charset = 'utf8mb4';
+    $host     = getenv('DB_HOST') ?: 'localhost';
+    $user     = getenv('DB_USER') ?: 'root';
+    $password = getenv('DB_PASS') ?: '';
+    $database = getenv('DB_NAME') ?: 'proyectofinal';
+    $charset  = 'utf8mb4';
 
     $dns = "mysql:host=$host;dbname=$database;charset=$charset";
 
     $opciones = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::MYSQL_ATTR_SSL_CA => getenv('DB_CA_PATH') ?: null,
     ];
 
     try {
