@@ -69,6 +69,23 @@ try {
                 exit;
             }
 
+            $horario_programa = trim($input['horario_programa'] ?? '');
+            if ($horario_programa !== '' && !preg_match('/^([01]\d|2[0-3]):[0-5]\d\s*-\s*([01]\d|2[0-3]):[0-5]\d$/', $horario_programa)) {
+                http_response_code(400);
+                echo json_encode(['error' => 'El horario debe estar en formato 24h (HH:MM - HH:MM), ej: 20:00 - 23:00']);
+                exit;
+            }
+            if ($horario_programa !== '') {
+                $partes = array_map('trim', explode('-', $horario_programa));
+                $inicio = explode(':', $partes[0]);
+                $fin = explode(':', $partes[1]);
+                if ((int)$fin[0] < (int)$inicio[0] || ((int)$fin[0] === (int)$inicio[0] && (int)$fin[1] <= (int)$inicio[1])) {
+                    http_response_code(400);
+                    echo json_encode(['error' => 'La hora de fin debe ser posterior a la hora de inicio']);
+                    exit;
+                }
+            }
+
             if ($method === 'POST') {
                 $sql = "INSERT INTO discjockey (nombre_artistico, nombre_real, cedula, telefono, correo, genero_favorito, horario_programa, nombre_programa, estado, fecha_ingreso) 
                         VALUES (:nombre_artistico, :nombre_real, :cedula, :telefono, :correo, :genero_favorito, :horario_programa, :nombre_programa, :estado, :fecha_ingreso)";
@@ -86,7 +103,7 @@ try {
                 ':telefono' => $telefono ?: null,
                 ':correo' => $correo ?: null,
                 ':genero_favorito' => $input['genero_favorito'] ?: null,
-                ':horario_programa' => trim($input['horario_programa'] ?? '') ?: null,
+                ':horario_programa' => $horario_programa ?: null,
                 ':nombre_programa' => trim($input['nombre_programa'] ?? '') ?: null,
                 ':estado' => $input['estado'] ?? 1,
                 ':fecha_ingreso' => $input['fecha_ingreso'] ?: null,

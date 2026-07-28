@@ -101,6 +101,16 @@ function validarNombre(nombre) {
     return nombre.length >= 2 && /[a-zA-ZÀ-ÿ\u00f1\u00d1]{2,}/.test(nombre);
 }
 
+function validarHorario(horario) {
+    if (!horario) return true;
+    const patron = /^([01]\d|2[0-3]):[0-5]\d\s*-\s*([01]\d|2[0-3]):[0-5]\d$/;
+    if (!patron.test(horario)) return false;
+    const [inicio, fin] = horario.split('-').map(h => h.trim());
+    const [hInicio, mInicio] = inicio.split(':').map(Number);
+    const [hFin, mFin] = fin.split(':').map(Number);
+    return (hFin > hInicio) || (hFin === hInicio && mFin > mInicio);
+}
+
 async function guardarDJ() {
     const id = document.getElementById('dj-id').value;
     const nombre_artistico = document.getElementById('dj-nombre_artistico').value.trim();
@@ -138,6 +148,12 @@ async function guardarDJ() {
         return;
     }
 
+    const horario = document.getElementById('dj-horario').value.trim();
+    if (horario && !validarHorario(horario)) {
+        alert('El horario debe estar en formato 24h (HH:MM - HH:MM), ej: 20:00 - 23:00');
+        return;
+    }
+
     const data = {
         nombre_artistico,
         nombre_real,
@@ -145,7 +161,7 @@ async function guardarDJ() {
         telefono,
         correo,
         genero_favorito: document.getElementById('dj-genero').value,
-        horario_programa: document.getElementById('dj-horario').value.trim(),
+        horario_programa: horario,
         nombre_programa: document.getElementById('dj-programa').value.trim(),
         fecha_ingreso: document.getElementById('dj-fecha_ingreso').value || null,
         estado: document.getElementById('dj-estado').value,
