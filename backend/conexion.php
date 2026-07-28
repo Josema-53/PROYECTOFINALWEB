@@ -1,19 +1,15 @@
 <?php
-    declare(strict_types=1);
-
-    $host = 'gateway01.us-east-1.prod.aws.tidbcloud.com';
-    $user = 'jePixA9eWecvF7W.root';
-    $password = 'xAxfbihqdA6Irv1o';
-    $database = 'bdventas';
+    $host = 'localhost';
+    $user = 'root';
+    $password = '';
+    $database = 'proyectofinal';
     $charset = 'utf8mb4';
 
     $dns = "mysql:host=$host;dbname=$database;charset=$charset";
 
     $opciones = [
-        //Obliga a PDO a lanzar excepciones en caso de error SQL
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_EMULATE_PREPARES => false,
     ];
 
     try {
@@ -23,7 +19,7 @@
         header('Content-Type: application/json; charset=utf-8');
         echo json_encode([
             'estado' => 'error',
-            'mensaje' => 'Error de conexión a la base de datos'
+            'mensaje' => 'Error de conexion a la base de datos'
         ]);
         exit;
     }
